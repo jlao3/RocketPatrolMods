@@ -11,9 +11,27 @@ class Play extends Phaser.Scene {
         
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+    
+        //load music
+        this.load.audio('music', './assets/Space_Groove.mp3');
     }
 
     create() {
+        //music
+        this.music = this.sound.add('music');
+
+        var musicConfig = {
+            mute: false,
+            volume: 0.5,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: true,
+            delay: 0
+        }
+
+        this.music.play(musicConfig);
+
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
         // white rectangle borders
@@ -40,9 +58,9 @@ class Play extends Phaser.Scene {
 
         // animation config
         this.anims.create({
-        key: 'explode',
-        frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
-        frameRate: 30
+            key: 'explode',
+            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
+            frameRate: 30
         });
 
         // score
@@ -54,7 +72,7 @@ class Play extends Phaser.Scene {
             fontSize: '28px',
             backgroundColor: '#F3B141',
             color: '#843605',
-            align: 'right',
+            align: 'left',
             padding: {
                 top: 5,
                 bottom: 5,
@@ -62,6 +80,8 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
+        this.total = this.game.settings.gameTimer / 1000;
+        this.timeRight = this.add.text(470, 54, this.total, scoreConfig);
 
         // game over flag
         this.gameOver = false;
@@ -69,6 +89,9 @@ class Play extends Phaser.Scene {
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            this.music.pause();
+            this.total = 0;
+            this.timeRight.text = this.total; 
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
@@ -84,10 +107,11 @@ class Play extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
-        
-        this.starfield.tilePositionX -= 4;
 
-        if (!this.gameOver) {               
+        if (!this.gameOver) {  
+            this.total = this.total - .016666666666667;
+            this.timeRight.text = this.total; 
+            this.starfield.tilePositionX -= 4;            
             this.p1Rocket.update();         // update rocket sprite
             this.ship01.update();           // update spaceships (x3)
             this.ship02.update();
