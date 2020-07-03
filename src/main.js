@@ -13,8 +13,11 @@
 * Allow the player to control the Rocket after it's fired (10)
 * Create a new title screen (15)
 * Display the time remaining (in seconds) on the screen (15)
+*         Top Right (done by using phaser's time.remove() function and creating a new delayed clock every hit)
 * Create a new spaceship type (w/ new artwork) that's smaller, moves faster, and is worth more points (25)
+*         Worth 50 points and gives 5 seconds extra time
 * Implement a new timing/scoring mechanism that adds time to the clock for successful hits (25)
+*         Time addition goes as follows: 0.5 seconds, 1 second, 2 seconds, and 5 seconds
 * **********************************************
 * **********************************************
 * SOURCES/CREDIT:
