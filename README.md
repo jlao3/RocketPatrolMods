@@ -1,2 +1,2 @@
-# RocketPatrol
+# RocketPatrolMods
 Rocket Patrol Mods assignment
